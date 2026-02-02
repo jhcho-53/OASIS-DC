@@ -1,0 +1,21 @@
+{
+  "model": {
+    "use_residual": true,
+    "use_sparse": true,
+    "anchor_learnable": true,
+    "anchor_mode": "scalar",
+    "anchor_alpha": 0.7,
+    "geometry": "hyperbolic"
+  },
+  "loss": {
+    "mu_scaleinv": 0.1,
+    "w_lidar": 0.3,
+    "w_anchor_reg": 0.05
+  },
+  "train": {
+    "tag": "mcprop_1shot_hyp_anchor_scalar",
+    "epochs": 200,
+    "lr": 0.001,
+    "save_dir": "runs_oneshot"
+  }
+}

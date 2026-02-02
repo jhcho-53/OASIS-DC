@@ -1,0 +1,6 @@
+{
+  "experiments": [
+    { "geometry": "hyperbolic", "tag": "mcprop_1shot_hyp" },
+    { "geometry": "elliptic",   "tag": "mcprop_1shot_ellip" }
+  ]
+}

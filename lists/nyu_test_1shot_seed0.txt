@@ -1,0 +1,1 @@
+test/rgb/0557.png test/depth_inpainted_mm/0557.png 0557 test/rgb_da/0557.png

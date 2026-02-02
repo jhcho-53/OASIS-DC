@@ -1,0 +1,29 @@
+{
+  "model": {
+    "dmax": 10.0       
+  },
+  "kshot": {
+    "batch_size": 1,
+    "num_workers": 4,
+    "persistent_workers": true,
+    "seed": 1,
+    "K_val": null          
+  },
+  "nyu": {
+    "h5_val_dir": "/home/vip/jaehyeon/RPN/data/nyudepthv2/val/official",
+
+    "mono_fmt": "/home/vip/jaehyeon/RPN/data/nyudepthv2/out_da/val/official/{id}_da_vitl_16bit.png",
+
+    "mono_scale": null,
+
+    "sparse_scale": null,
+
+    "crop_h": 228,
+    "crop_w": 304
+  },
+  "poisson": {
+    "lambda": 10.0, 
+    "iters": 3000,   
+    "hard": false   
+  }
+}

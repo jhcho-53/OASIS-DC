@@ -1,0 +1,48 @@
+{
+  "model": {
+    "dmax": 10.0,
+    "steps": 6,
+    "kernels": [3, 5, 7],
+    "use_residual": true,
+    "use_sparse": false,
+    "anchor_alpha": 0.7,
+    "anchor_learnable": true,
+    "anchor_mode": "map",
+    "kappa_min": 0.001,
+    "kappa_max": 1.0,
+    "geometry": "hyperbolic"
+  },
+  "loss": { "mu_scaleinv": 0.1, "w_lidar": 0.3, "w_anchor_reg": 0.0 },
+  "kshot": {
+    "seed": 1,
+    "batch_size": 8,
+    "epochs": 200,
+    "lr": 0.001,
+    "save_dir": "runs_nyu_1shot",
+    "tag": "mcprop_nyu_1shot",
+    "K_train": 1,
+    "K_val": 1,
+    "preview_every": 1
+  },
+  "nyu": {
+    "root": "/home/vip/jaehyeon/RPN/data/nyudepthv2/out_export",
+    "train_dir": "/home/vip/jaehyeon/RPN/data/nyudepthv2/out_export/train",
+    "val_dir":   "/home/vip/jaehyeon/RPN/data/nyudepthv2/out_export/val",
+
+    "mono_root": "/home/vip/jaehyeon/RPN/data/nyudepthv2/out_da",
+    "est_cmap": "inferno",
+
+    "random_pick": true,
+    "random_tries": 200,
+    "require_rgb": false,
+
+    "crop_h": 228,
+    "crop_w": 304,
+    "fix_sparse": true
+  },
+  "poisson": {
+    "lambda": 10.0,
+    "iters": 1000,
+    "hard": false
+  }
+}
