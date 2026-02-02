@@ -41,3 +41,9 @@ We provide training and evaluation code for standard benchmarks (e.g., **NYU Dep
 - [ ] Reproducible scripts (dataset preparation, evaluation, visualization)
 
 ---
+
+## Contact
+- **Jaehyeon Cho** — `jjh000503@gachon.ac.kr`
+- **Jhonhyun An** — `jhonghyun@gachon.ac.kr`  
+
+> If you have questions, please open an issue or contact us via email.
