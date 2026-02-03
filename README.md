@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="#">
+  <a href="https://arxiv.org/pdf/2602.01268">
     <strong><code>📄 Paper</code></strong>
   </a>
   <a href="#">
