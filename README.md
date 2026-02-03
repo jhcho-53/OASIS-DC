@@ -41,6 +41,10 @@ Recent monocular foundation models excel at zero-shot depth estimation, yet thei
 
 ---
 
+## Experiment
+
+### KITTI Depth Completion Benchmark
+
 <table>
   <thead>
     <tr>
