@@ -45,73 +45,86 @@ Recent monocular foundation models excel at zero-shot depth estimation, yet thei
   <thead>
     <tr>
       <th rowspan="2" style="text-align:left;">Method</th>
-      <th colspan="2">1-shot</th>
-      <th colspan="2">10-shot</th>
-      <th colspan="2">100-shot</th>
+      <th colspan="2" style="text-align:center;">1-shot</th>
+      <th colspan="2" style="text-align:center;">10-shot</th>
+      <th colspan="2" style="text-align:center;">100-shot</th>
+      <th colspan="2" style="text-align:center;">1-Sequence</th>
     </tr>
     <tr>
-      <th>RMSE (m)</th>
-      <th>MAE (m)</th>
-      <th>RMSE (m)</th>
-      <th>MAE (m)</th>
-      <th>RMSE (m)</th>
-      <th>MAE (m)</th>
+      <th style="text-align:center;">RMSE (m)</th>
+      <th style="text-align:center;">MAE (m)</th>
+      <th style="text-align:center;">RMSE (m)</th>
+      <th style="text-align:center;">MAE (m)</th>
+      <th style="text-align:center;">RMSE (m)</th>
+      <th style="text-align:center;">MAE (m)</th>
+      <th style="text-align:center;">RMSE (m)</th>
+      <th style="text-align:center;">MAE (m)</th>
     </tr>
   </thead>
+
   <tbody>
     <tr>
       <td style="text-align:left;">CSPN</td>
-      <td align="right">1.4827</td><td align="right">1.2058</td>
-      <td align="right">0.3166</td><td align="right">0.1961</td>
-      <td align="right">0.2854</td><td align="right">0.1307</td>
+      <td style="text-align:center;">9.2748</td><td style="text-align:center;">3.5921</td>
+      <td style="text-align:center;">2.0222</td><td style="text-align:center;">0.7825</td>
+      <td style="text-align:center;">1.4510</td><td style="text-align:center;">0.5184</td>
+      <td style="text-align:center;">2.6289</td><td style="text-align:center;">0.8355</td>
     </tr>
+
+    <tr>
+      <td style="text-align:left;">S2D</td>
+      <td style="text-align:center;">8.8479</td><td style="text-align:center;">5.6022</td>
+      <td style="text-align:center;">5.0500</td><td style="text-align:center;">3.1469</td>
+      <td style="text-align:center;">4.2799</td><td style="text-align:center;">2.6633</td>
+      <td style="text-align:center;">4.7950</td><td style="text-align:center;">2.5610</td>
+    </tr>
+
     <tr>
       <td style="text-align:left;">NLSPN</td>
-      <td align="right">1.9358</td><td align="right">1.6132</td>
-      <td align="right">1.5995</td><td align="right">0.8261</td>
-      <td align="right">0.5501</td><td align="right">0.4150</td>
+      <td style="text-align:center;">7.2899</td><td style="text-align:center;">4.7422</td>
+      <td style="text-align:center;">4.0070</td><td style="text-align:center;">2.2588</td>
+      <td style="text-align:center;">2.4979</td><td style="text-align:center;">1.1710</td>
+      <td style="text-align:center;">4.0290</td><td style="text-align:center;">1.7881</td>
     </tr>
+
     <tr>
       <td style="text-align:left;">DySPN</td>
-      <td align="right">1.5474</td><td align="right">1.2851</td>
-      <td align="right">0.4102</td><td align="right">0.2817</td>
-      <td align="right">0.3079</td><td align="right">0.1706</td>
+      <td style="text-align:center;">2.6350</td><td style="text-align:center;">0.8870</td>
+      <td style="text-align:center;">2.2701</td><td style="text-align:center;">0.9150</td>
+      <td style="text-align:center;">1.8777</td><td style="text-align:center;">0.6188</td>
+      <td style="text-align:center;">2.8530</td><td style="text-align:center;">0.7980</td>
     </tr>
+
     <tr>
       <td style="text-align:left;">CompletionFormer</td>
-      <td align="right">1.8218</td><td align="right">1.5539</td>
-      <td align="right">1.1583</td><td align="right">1.0162</td>
-      <td align="right">0.9914</td><td align="right">0.8164</td>
+      <td style="text-align:center;">4.7212</td><td style="text-align:center;">2.3789</td>
+      <td style="text-align:center;">3.1601</td><td style="text-align:center;">1.4740</td>
+      <td style="text-align:center;">2.6122</td><td style="text-align:center;">1.3299</td>
+      <td style="text-align:center;">4.5588</td><td style="text-align:center;">1.9603</td>
     </tr>
-    <tr>
-      <td style="text-align:left;">CostDCNet</td>
-      <td align="right">1.2298</td><td align="right">0.9754</td>
-      <td align="right">0.2363</td><td align="right">0.1288</td>
-      <td align="right">0.1770</td><td align="right">0.0836</td>
-    </tr>
+
     <tr>
       <td style="text-align:left;">BPNet</td>
-      <td align="right">0.3573</td><td align="right">0.2077</td>
-      <td align="right">0.2392</td><td align="right">0.1120</td>
-      <td align="right">0.1757</td><td align="right">0.0793</td>
+      <td style="text-align:center;">5.4000</td><td style="text-align:center;">1.0740</td>
+      <td style="text-align:center;">1.8799</td><td style="text-align:center;">0.5559</td>
+      <td style="text-align:center;">1.3001</td><td style="text-align:center;">0.3910</td>
+      <td style="text-align:center;">2.1322</td><td style="text-align:center;">0.6420</td>
     </tr>
+
     <tr>
       <td style="text-align:left;">DepthPrompting</td>
-      <td align="right">0.3583</td><td align="right">0.2067</td>
-      <td align="right">0.2195</td><td align="right">0.1006</td>
-      <td align="right">0.2101</td><td align="right">0.1008</td>
+      <td style="text-align:center;">2.9840</td><td style="text-align:center;">1.1430</td>
+      <td style="text-align:center;">2.3988</td><td style="text-align:center;">1.1290</td>
+      <td style="text-align:center;">1.8249</td><td style="text-align:center;">0.6240</td>
+      <td style="text-align:center;">2.9468</td><td style="text-align:center;">0.9869</td>
     </tr>
-    <tr>
-      <td style="text-align:left;"><b>UniDC</b></td>
-      <td align="right"><b>0.2099</b></td><td align="right"><b>0.1075</b></td>
-      <td align="right"><b>0.1657</b></td><td align="right"><b>0.0794</b></td>
-      <td align="right"><b>0.1473</b></td><td align="right"><b>0.0669</b></td>
-    </tr>
+
     <tr>
       <td style="text-align:left;"><b>OASIS-DC (Ours)</b></td>
-      <td align="right">0.2105</td><td align="right">0.1105</td>
-      <td align="right">0.1670</td><td align="right">0.0838</td>
-      <td align="right">0.1484</td><td align="right">0.0706</td>
+      <td style="text-align:center;"><b>1.4190</b></td><td style="text-align:center;"><b>0.5073</b></td>
+      <td style="text-align:center;"><b>1.2830</b></td><td style="text-align:center;"><b>0.4001</b></td>
+      <td style="text-align:center;"><b>1.2455</b></td><td style="text-align:center;"><b>0.3548</b></td>
+      <td style="text-align:center;"><b>1.5782</b></td><td style="text-align:center;"><b>0.5540</b></td>
     </tr>
   </tbody>
 </table>
