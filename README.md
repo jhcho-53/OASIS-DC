@@ -7,6 +7,8 @@
   <strong>ICRA 2026</strong><br>
 </p>
 
+[![OASIS-DC](https://img.shields.io/badge/Arxiv-Paper-2b9348.svg?logo=arXiv)](https://arxiv.org/abs/2507.19239)
+
 <p align="center">
   <a href="#">
     <strong><code>📄 Paper</code></strong>
@@ -25,8 +27,7 @@
 ---
 
 ## Overview
-**OASIS-DC** is a depth completion framework that improves **generalization** via **output-level alignment** on **sparse-integrated monocular pseudo depth**.
-We provide training and evaluation code for standard benchmarks (e.g., **NYU Depth V2** and **KITTI Depth Completion**).
+Recent monocular foundation models excel at zero-shot depth estimation, yet their outputs are inherently relative rather than metric, limiting direct use in robotics and autonomous driving. We leverage the fact that relative depth preserves global layout and boundaries: by calibrating it with sparse range measurements, we transform it into a pseudo metric depth prior. Building on this prior, we design a refinement network that follows the prior where reliable and deviates where necessary, enabling accurate metric predictions from very few labeled samples. The resulting system is particularly effective when curated validation data are unavailable, sustaining stable scale and sharp edges across few-shot regimes. These findings suggest that coupling foundation priors with sparse anchors is a practical route to robust, deployment-ready depth completion under real-world label scarcity.
 
 > **Note:** This repository is under preparation.  
 > Training code, evaluation scripts, and checkpoints will be uploaded soon.
