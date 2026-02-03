@@ -1,3 +1,0 @@
-Results on test set
-Plain Poisson : RMSE 0.212616  | MAE 0.113902  | delta1 0.962570
-Edge-Constr.  : RMSE 0.212285  | MAE 0.113038  | delta1 0.963649
