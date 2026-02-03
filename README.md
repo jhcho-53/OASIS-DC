@@ -132,3 +132,12 @@ Recent monocular foundation models excel at zero-shot depth estimation, yet thei
 - **Jhonhyun An** — `jhonghyun@gachon.ac.kr`  
 
 > If you have questions, please open an issue or contact us via email.
+
+---
+
+## Related Works
+We are deeply grateful for the following outstanding opensource work; without them, our work would not have been possible.
+- [UniDC](https://github.com/AIR-THU/UniV2X)
+- [DepthPrompting](https://github.com/JinhwiPark/DepthPrompting)
+- [Depth Anything V2](https://github.com/DepthAnything/Depth-Anything-V2)
+- [CSPN](https://github.com/XinJCheng/CSPN)
