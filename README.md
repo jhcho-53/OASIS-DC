@@ -41,50 +41,82 @@ Recent monocular foundation models excel at zero-shot depth estimation, yet thei
 
 ---
 
-## Experiment
-
-### KITTI Depth Completion Benchmark
-> Protocol: 1/10/100-shot are sampled from the training split only; evaluation is on the official 1,000-frame validation split.
-
-#### 1-shot
-| Method | RMSE ↓ | MAE ↓ | 1-Sequence RMSE ↓ | 1-Sequence MAE ↓ |
-|---|---:|---:|---:|---:|
-| CSPN | 9.2748 | 3.5921 | 2.6289 | 0.8355 |
-| S2D | 8.8479 | 5.6022 | 4.7950 | 2.5610 |
-| NLSPN | 7.2899 | 4.7422 | 4.0290 | 1.7881 |
-| DySPN | 2.6350 | 0.8870 | 2.8530 | 0.7980 |
-| CompletionFormer | 4.7212 | 2.3789 | 4.5588 | 1.9603 |
-| BPNet | 5.4000 | 1.0740 | 2.1322 | 0.6420 |
-| DepthPrompting | 2.9840 | 1.1430 | 2.9468 | 0.9869 |
-| **OASIS-DC (Ours)** | **1.4190** | **0.5073** | **1.5782** | **0.5540** |
+<table>
+  <thead>
+    <tr>
+      <th rowspan="2" style="text-align:left;">Method</th>
+      <th colspan="2">1-shot</th>
+      <th colspan="2">10-shot</th>
+      <th colspan="2">100-shot</th>
+    </tr>
+    <tr>
+      <th>RMSE (m)</th>
+      <th>MAE (m)</th>
+      <th>RMSE (m)</th>
+      <th>MAE (m)</th>
+      <th>RMSE (m)</th>
+      <th>MAE (m)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align:left;">CSPN</td>
+      <td align="right">1.4827</td><td align="right">1.2058</td>
+      <td align="right">0.3166</td><td align="right">0.1961</td>
+      <td align="right">0.2854</td><td align="right">0.1307</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">NLSPN</td>
+      <td align="right">1.9358</td><td align="right">1.6132</td>
+      <td align="right">1.5995</td><td align="right">0.8261</td>
+      <td align="right">0.5501</td><td align="right">0.4150</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">DySPN</td>
+      <td align="right">1.5474</td><td align="right">1.2851</td>
+      <td align="right">0.4102</td><td align="right">0.2817</td>
+      <td align="right">0.3079</td><td align="right">0.1706</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">CompletionFormer</td>
+      <td align="right">1.8218</td><td align="right">1.5539</td>
+      <td align="right">1.1583</td><td align="right">1.0162</td>
+      <td align="right">0.9914</td><td align="right">0.8164</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">CostDCNet</td>
+      <td align="right">1.2298</td><td align="right">0.9754</td>
+      <td align="right">0.2363</td><td align="right">0.1288</td>
+      <td align="right">0.1770</td><td align="right">0.0836</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">BPNet</td>
+      <td align="right">0.3573</td><td align="right">0.2077</td>
+      <td align="right">0.2392</td><td align="right">0.1120</td>
+      <td align="right">0.1757</td><td align="right">0.0793</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">DepthPrompting</td>
+      <td align="right">0.3583</td><td align="right">0.2067</td>
+      <td align="right">0.2195</td><td align="right">0.1006</td>
+      <td align="right">0.2101</td><td align="right">0.1008</td>
+    </tr>
+    <tr>
+      <td style="text-align:left;"><b>UniDC</b></td>
+      <td align="right"><b>0.2099</b></td><td align="right"><b>0.1075</b></td>
+      <td align="right"><b>0.1657</b></td><td align="right"><b>0.0794</b></td>
+      <td align="right"><b>0.1473</b></td><td align="right"><b>0.0669</b></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;"><b>OASIS-DC (Ours)</b></td>
+      <td align="right">0.2105</td><td align="right">0.1105</td>
+      <td align="right">0.1670</td><td align="right">0.0838</td>
+      <td align="right">0.1484</td><td align="right">0.0706</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
-
-#### 10-shot
-| Method | RMSE ↓ | MAE ↓ | 1-Sequence RMSE ↓ | 1-Sequence MAE ↓ |
-|---|---:|---:|---:|---:|
-| CSPN | 2.0222 | 0.7825 | 2.6289 | 0.8355 |
-| S2D | 5.0500 | 3.1469 | 4.7950 | 2.5610 |
-| NLSPN | 4.0070 | 2.2588 | 4.0290 | 1.7881 |
-| DySPN | 2.2701 | 0.9150 | 2.8530 | 0.7980 |
-| CompletionFormer | 3.1601 | 1.4740 | 4.5588 | 1.9603 |
-| BPNet | 1.8799 | 0.5559 | 2.1322 | 0.6420 |
-| DepthPrompting | 2.3988 | 1.1290 | 2.9468 | 0.9869 |
-| **OASIS-DC (Ours)** | **1.2830** | **0.4001** | **1.5782** | **0.5540** |
-
----
-
-#### 100-shot
-| Method | RMSE ↓ | MAE ↓ | 1-Sequence RMSE ↓ | 1-Sequence MAE ↓ |
-|---|---:|---:|---:|---:|
-| CSPN | 1.4510 | 0.5184 | 2.6289 | 0.8355 |
-| S2D | 4.2799 | 2.6633 | 4.7950 | 2.5610 |
-| NLSPN | 2.4979 | 1.1710 | 4.0290 | 1.7881 |
-| DySPN | 1.8777 | 0.6188 | 2.8530 | 0.7980 |
-| CompletionFormer | 2.6122 | 1.3299 | 4.5588 | 1.9603 |
-| BPNet | 1.3001 | 0.3910 | 2.1322 | 0.6420 |
-| DepthPrompting | 1.8249 | 0.6240 | 2.9468 | 0.9869 |
-| **OASIS-DC (Ours)** | **1.2455** | **0.3548** | **1.5782** | **0.5540** |
 
 ## Contact
 - **Jaehyeon Cho** — `jjh000503@gachon.ac.kr`
