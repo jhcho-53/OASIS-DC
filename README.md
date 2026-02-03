@@ -10,6 +10,8 @@
 [![OASIS-DC](https://img.shields.io/badge/Arxiv-Paper-2b9348.svg?logo=arXiv)](https://arxiv.org/abs/2507.19239)
 
 <p align="center">
+
+[![OASIS-DC](https://img.shields.io/badge/Arxiv-Paper-2b9348.svg?logo=arXiv)](https://arxiv.org/abs/2507.19239)
   <a href="#">
     <strong><code>📄 Paper</code></strong>
   </a>
