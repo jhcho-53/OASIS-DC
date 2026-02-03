@@ -8,11 +8,13 @@
 </p>
 
 <p align="center">
-  <a href="ARXIV_OR_PAPER_URL"><strong><code>📄 Paper</code></strong></a>
-  <a href="ARXIV_OR_PAPER_URL"><img src="https://img.shields.io/badge/Arxiv-Paper-2b9348.svg?logo=arXiv" alt="arXiv Paper" /></a>
-  <a href="SOURCE_CODE_URL"><strong><code>💻 Source Code</code></strong></a>
+  <a href="#">
+    <strong><code>📄 Paper</code></strong>
+  </a>
+  <a href="#">
+    <strong><code>💻 Source Code</code></strong>
+  </a>
 </p>
-
 
 ---
 
