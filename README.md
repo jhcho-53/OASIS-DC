@@ -33,10 +33,9 @@ Recent monocular foundation models excel at zero-shot depth estimation, yet thei
 
 ---
 
-## Demo
+## Qualitative Demo (10-shot Training)
 
-[▶ Demo video](https://github.com/user-attachments/assets/30d4fb69-80ad-4a80-b1e7-5eff60ab13fa)
-
+[▶ Demo video](https://github.com/user-attachments/assets/65fe38f0-6758-4c65-9e79-d05f117583fc)
 
 
 ---
