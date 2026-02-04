@@ -32,6 +32,10 @@ Recent monocular foundation models excel at zero-shot depth estimation, yet thei
 
 ---
 
+## Demo
+[![Demo Video](https://img.youtube.com/vi/1ooFZEWZPFk/0.jpg)](https://youtu.be/1ooFZEWZPFk)
+
+---
 ## What this repository will contain (Coming Soon)
 - [ ] Official implementation of **OASIS-DC**
 - [ ] Training & evaluation code for **NYU Depth V2**
