@@ -19,6 +19,7 @@
 ---
 
 ## 🔥 News
+
 - **[2026]** OASIS-DC has been **accepted to ICRA 2026**.
 - **Code and pretrained models will be released soon.** (This repository will be updated.)
 
@@ -33,7 +34,9 @@ Recent monocular foundation models excel at zero-shot depth estimation, yet thei
 ---
 
 ## Demo
-[![Demo Video](https://img.youtube.com/vi/1ooFZEWZPFk/0.jpg)](https://youtu.be/1ooFZEWZPFk)
+
+https://github.com/user-attachments/assets/8072fd15-2eae-4fd0-a075-78bda62e68c7
+
 
 ---
 ## What this repository will contain (Coming Soon)
