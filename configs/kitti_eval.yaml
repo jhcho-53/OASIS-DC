@@ -1,0 +1,52 @@
+# KITTI Depth Completion evaluation configuration  
+dataset: kitti
+
+# Data configuration
+data:
+  data_root: "/path/to/kitti_depth_completion/val_selection_cropped"
+  limit_sparse: -1              # Use all LiDAR points
+  est_mode: "precomputed"       # "precomputed", "zeros"
+  pre_est_dir: "est"
+  target_size: [352, 1216]      # KITTI standard size [H, W]
+
+# Model configuration
+model:
+  dmax: 80.0
+  steps: 6                      # Fewer steps for KITTI
+  geometry: "hyper"
+  use_sparse: true
+  use_residual: true
+  
+  # Poisson solver
+  poisson_tol: 1e-5
+  poisson_maxiter: 1000
+  poisson_init: "est"
+  poisson_auto_flip: true
+  poisson_est_affine: true
+  poisson_smooth_est: true
+  
+  # Affinity propagation
+  use_p_affinity: true
+  p_only_gate: false
+  kernels: [3, 5, 7]            # Larger kernels for KITTI resolution
+  kappa_min: 1e-3
+  kappa_max: 1.0
+  
+  # Anchor system
+  anchor_learnable: true
+  anchor_mode: "map"
+  anchor_alpha: 0.7             # Higher alpha for KITTI
+  
+  min_gate: 0.0
+  min_alpha: 0.0
+
+# Evaluation configuration
+eval:
+  batch_size: 1
+  num_workers: 4
+  mode: "all"                   # "all", "full", "residual_off", "poisson_only"
+  save_predictions: false
+  pred_dir: "predictions"
+
+# Reproducibility
+seed: 0

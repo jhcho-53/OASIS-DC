@@ -1,0 +1,109 @@
+# KITTI Depth Completion n-shot configuration (flexible shot count)
+dataset: kitti
+
+# Data configuration
+data:
+  data_root: "/path/to/kitti_depth_completion/val_selection_cropped"
+  shots: 1                      # Number of shots (can be overridden via command line)
+  seed: 0                       # Random seed for shot selection
+  sequence_based: false         # If true, use sequence-based training instead of shot-based
+  limit_sparse: -1              # Use all LiDAR points
+  est_mode: "precomputed"       # "precomputed", "zeros"
+  pre_est_dir: "est"
+  target_size: [352, 1216]      # KITTI standard size [H, W]
+
+# Model configuration (adaptive based on shot count)
+model:
+  dmax: 80.0
+  steps: 6                      # Fewer steps for KITTI
+  geometry: "hyper"             # "hyper" or "ellip"
+  use_sparse: true
+  use_residual: true
+  
+  # Poisson solver
+  poisson_tol: 1e-5
+  poisson_maxiter: 1000
+  poisson_init: "est"
+  poisson_auto_flip: true
+  poisson_est_affine: true
+  poisson_smooth_est: true
+  
+  # Affinity propagation
+  use_p_affinity: true
+  p_only_gate: false
+  kernels: [3, 5, 7]            # Larger kernels for KITTI resolution
+  kappa_min: 1e-3
+  kappa_max: 1.0
+  
+  # Anchor system (adaptive parameters)
+  anchor_learnable: true        # Generally enabled for KITTI
+  anchor_mode: "map"            # "scalar" or "map"
+  anchor_alpha: 0.5             # Will be adjusted based on shot count
+  
+  min_gate: 0.0
+  min_alpha: 0.0
+
+# Training configuration (adaptive based on shot count)
+train:
+  epochs: 50                    # Will be adjusted based on shot count
+  lr: 1e-3
+  weight_decay: 1e-4
+  batch_size: 1                 # KITTI typically uses batch_size=1 due to memory
+  num_workers: 4
+  save_every: 10
+  eval_every: 5
+  
+  # Loss weights
+  mu_scaleinv: 0.1
+  w_anchor_reg: 0.1             # Will be adjusted based on shot count
+
+# Evaluation configuration
+eval:
+  batch_size: 1
+  num_workers: 4
+  mode: "all"                   # "all", "full", "residual_off", "poisson_only"
+
+# Reproducibility
+seed: 0
+
+# Shot-specific adaptations (automatically applied based on shots value)
+shot_adaptations:
+  "1":
+    model:
+      anchor_learnable: false
+      anchor_alpha: 0.3
+      steps: 6
+    train:
+      epochs: 40
+      batch_size: 1
+      w_anchor_reg: 0.0
+  
+  "10":
+    model:
+      anchor_learnable: true
+      anchor_alpha: 0.5
+      steps: 6
+    train:
+      epochs: 60
+      batch_size: 1
+      w_anchor_reg: 0.05
+      
+  "100":
+    model:
+      anchor_learnable: true
+      anchor_alpha: 0.7
+      steps: 8
+    train:
+      epochs: 80
+      batch_size: 1
+      w_anchor_reg: 0.1
+
+  "sequence":
+    model:
+      anchor_learnable: true
+      anchor_alpha: 0.6
+      steps: 7
+    train:
+      epochs: 100
+      batch_size: 1
+      w_anchor_reg: 0.08

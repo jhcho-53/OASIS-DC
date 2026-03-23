@@ -1,0 +1,91 @@
+# NYU Depth V2 n-shot configuration (flexible shot count)
+dataset: nyu
+
+# Data configuration
+data:
+  data_root: "/path/to/NYUv2"
+  shots: 1                      # Number of shots (can be overridden via command line)
+  seed: 0                       # Random seed for shot selection
+  test_list: "lists/nyu_test_full.txt"
+  n_sparse: 500
+  target_size: [240, 320]       # [H, W]
+  est_mode: "precomputed"       # "precomputed", "foundation", "zeros"
+  pre_mono_dir: "mono_rel"
+  normalize_on_valid_gt: true
+
+# Model configuration (adaptive based on shot count)
+model:
+  dmax: 10.0
+  steps: 8
+  geometry: "hyper"             # "hyper" or "ellip"
+  use_sparse: true
+  use_residual: true
+  
+  # Poisson solver
+  poisson_tol: 1e-5
+  poisson_maxiter: 1000
+  poisson_init: "est"
+  poisson_auto_flip: true
+  poisson_est_affine: true
+  poisson_smooth_est: true
+  
+  # Affinity propagation
+  use_p_affinity: true
+  p_only_gate: false
+  kernels: [3, 5]
+  kappa_min: 0.03
+  kappa_max: 0.5
+  
+  # Anchor system (adaptive parameters)
+  anchor_learnable: false       # Will be set based on shot count
+  anchor_mode: "map"            # "scalar" or "map"
+  anchor_alpha: 0.1             # Will be adjusted based on shot count
+  
+  min_gate: 0.0
+  min_alpha: 0.0
+
+# Training configuration (adaptive based on shot count)
+train:
+  epochs: 50                    # Will be adjusted based on shot count
+  lr: 1e-3
+  weight_decay: 1e-4
+  batch_size: 1                 # Will be adjusted based on shot count
+  num_workers: 4
+  save_every: 10
+  eval_every: 5
+  
+  # Loss weights
+  mu_scaleinv: 0.1
+  w_anchor_reg: 0.0             # Will be adjusted based on shot count
+
+# Reproducibility
+seed: 0
+
+# Shot-specific adaptations (automatically applied based on shots value)
+shot_adaptations:
+  "1":
+    model:
+      anchor_learnable: false
+      anchor_alpha: 0.1
+    train:
+      epochs: 50
+      batch_size: 1
+      w_anchor_reg: 0.0
+  
+  "10": 
+    model:
+      anchor_learnable: false
+      anchor_alpha: 0.2
+    train:
+      epochs: 75
+      batch_size: 1
+      w_anchor_reg: 0.0
+      
+  "100":
+    model:
+      anchor_learnable: true
+      anchor_alpha: 0.3
+    train:
+      epochs: 100
+      batch_size: 2
+      w_anchor_reg: 0.1
