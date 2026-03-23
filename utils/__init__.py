@@ -1,4 +1,4 @@
-# Refactored utils package with modular structure
+# Utils package with modular structure
 
 # Core utilities
 from .core import AverageMeter, rmse, _as_chw4, _as_1ch4, _resize_like

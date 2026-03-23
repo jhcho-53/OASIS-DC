@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Flat KITTI K-shot(train) 폴더에서 sparse + estimation(0..255)으로
-8/32-lines sparseN 및 pseudoN(= Poisson 보간 결과) 생성 + 시각화 저장.
+Generate 8/32-line sparse and pseudo depth from flat KITTI K-shot train folder
+with sparse + estimation (0..255) and save visualizations.
 
-입력:  ds_root/{sparse, estim}  (+ calib by date)
-출력:  ds_root/{sparse8, pseudo8, sparse32, pseudo32}/<basename>.png
-시각화: viz_root/{sparse8, pseudo8, sparse32, pseudo32}/<basename>.png  (옵션 --save-viz)
+Input:  ds_root/{sparse, estim}  (+ calib by date)
+Output: ds_root/{sparse8, pseudo8, sparse32, pseudo32}/<basename>.png
+Viz:    viz_root/{sparse8, pseudo8, sparse32, pseudo32}/<basename>.png  (option --save-viz)
 
-시각화는 'reversed JET'의 상단(near 구간)을 보라색으로 치환해
-가까움=보라 → 파랑(청록/녹색 경유) → 빨강=멀리 가 되도록 합니다.
+Visualization uses 'reversed JET' with purple substitution in top (near) region:
+near=purple → blue (via cyan/green) → red=far
 """
 
 import os, re, argparse, glob
@@ -23,7 +23,7 @@ from tqdm import tqdm
 from scipy import sparse as sp
 from scipy.sparse.linalg import spsolve
 
-# Import from refactored utils
+# Import utilities
 from ..datasets.kitti.calibration import (
     load_calibs_by_date, 
     parse_date_from_path as parse_date_from_name,
@@ -57,17 +57,17 @@ def read_hw(path: str) -> Optional[Tuple[int,int]]:
     if im is None: return None
     return im.shape[:2]
 
-# ---------- VIZ: Reversed JET + 상단(near) 보라 치환 ----------
+# ---------- VISUALIZATION: Reversed JET + purple substitution for near ----------
 
 def build_reversed_jet_with_purple_near(
     purple_bgr=(128, 0, 128), top_bins: int = 32, gamma: float = 2.0
 ) -> np.ndarray:
     """
-    1) 기본 JET LUT(0=파랑, 255=빨강)를 만든 뒤
-    2) LUT를 역순으로 뒤집어(0=빨강, 255=파랑),
-    3) '상단(top, near)' 구간(기본 32 step)을 보라색으로 부드럽게 치환(가중 γ)합니다.
+    1) Create basic JET LUT (0=blue, 255=red)
+    2) Reverse the LUT (0=red, 255=blue)
+    3) Smoothly substitute 'top (near)' region (default 32 steps) with purple (weighted gamma)
 
-    결과: idx가 클수록(near) 보라에 가깝고, 점차 파랑→청록→녹색→노랑→빨강(멀리).
+    Result: Higher idx (near) closer to purple, gradually blue→cyan→green→yellow→red (far)
     """
     base = cv2.applyColorMap(np.arange(256, dtype=np.uint8), cv2.COLORMAP_JET)   # (256,1,3) BGR
     lut  = base[::-1, :, :].copy()  # reversed JET: 0=red, 255=blue
@@ -77,26 +77,26 @@ def build_reversed_jet_with_purple_near(
     purple = np.array(list(purple_bgr), dtype=np.float32)
     denom = max(1, 255 - start)
 
-    # start..255: t=0..1, t^gamma로 보라 영역을 near에 더 집중
+    # start..255: t=0..1, t^gamma to concentrate purple region more on near
     for i in range(start, 256):
         t = (i - start) / float(denom)        # 0..1
-        a = t ** float(gamma)                  # 감마 보정(기본 2.0)
+        a = t ** float(gamma)                  # Gamma correction (default 2.0)
         base_col = lut[i, 0, :].astype(np.float32)
-        # base(파랑 쪽) ↔ purple 블렌딩: near(255)로 갈수록 purple 쪽으로 붙임
+        # base(blue side) ↔ purple blending: closer to purple as approaching near(255)
         lut[i, 0, :] = np.clip((1.0 - a) * base_col + a * purple, 0, 255).astype(np.uint8)
     return lut
 
 def depth_to_viz_bgr(depth_m: np.ndarray, max_m: float, lut: np.ndarray) -> np.ndarray:
     """
-    depth(m) → idx = (1 - d/max)*255 (near=큰 idx) → LUT 적용.
-    미측정(0)은 검정 처리.
+    depth(m) → idx = (1 - d/max)*255 (near=large idx) → apply LUT.
+    Unmeasured (0) pixels are black.
     """
     d = depth_m.copy()
     mask = d > 0
     d = np.clip(d, 0.0, float(max_m))
     idx = (1.0 - (d / (float(max_m) + 1e-6))) * 255.0
     idx_u8 = np.clip(idx, 0, 255).astype(np.uint8)
-    color = cv2.applyColorMap(idx_u8, lut)    # 커스텀 256x1x3 BGR LUT
+    color = cv2.applyColorMap(idx_u8, lut)    # Custom 256x1x3 BGR LUT
     color[~mask] = 0
     return color
 
@@ -105,7 +105,7 @@ def save_viz_png(path: str, depth_m: np.ndarray, viz_max_m: float, lut: np.ndarr
     col = depth_to_viz_bgr(depth_m, viz_max_m, lut)
     cv2.imwrite(path, col)
 
-# -------------------- Calib by DATE (using refactored utils) --------------------
+# -------------------- Calibration by DATE --------------------
 
 # -------------------- N-lines degrade --------------------
 
@@ -151,7 +151,7 @@ def build_Laplacian(H: int, W: int) -> sp.csr_matrix:
     main = np.full(N, 4, np.float32)
     off  = np.full(N, -1, np.float32)
     A = sp.diags([main, off, off, off, off], [0, -1, +1, -W, +W], format='csr')
-    # block-row wrap 제거
+    # Remove block-row wrap
     for i in range(H):
         L = i * W; R = i * W + (W - 1)
         if L - 1 >= 0: A[L, L-1] = 0; A[L-1, L] = 0
@@ -173,7 +173,7 @@ def _border_mask(h: int, w: int, thick: int = 1) -> np.ndarray:
     return m
 
 def _expand_anchors_local_avg(depth_m: np.ndarray, mask_sparse: np.ndarray, radius: int) -> Tuple[np.ndarray, np.ndarray]:
-    """희소 앵커를 반경 r로 확장하고 새로 추가된 고정값은 국소 평균으로 채움."""
+    """Expand sparse anchors with radius r and fill newly added fixed values with local average."""
     if radius <= 0:
         return depth_m, mask_sparse
     r = int(radius)
@@ -202,11 +202,11 @@ def poisson_complete(
     anchor_dilate: int = 0
 ) -> np.ndarray:
     """
-    순수 Poisson:
+    Pure Poisson:
       A_uu x_u = b_u - A_uk v_k
     b = gain * div(∇I_norm), I_norm = I/255
-    known set k: (sparse ⊕ anchor_dilate) ∪ border(정책)
-    v_k: sparse/anchor -> LiDAR/지역평균, border -> 정책값
+    known set k: (sparse ⊕ anchor_dilate) ∪ border(policy)
+    v_k: sparse/anchor -> LiDAR/local_avg, border -> policy_value
     """
     H, W = estim_gray_0_255.shape
     I = estim_gray_0_255.astype(np.float32)

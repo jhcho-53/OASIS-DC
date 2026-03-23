@@ -1,18 +1,18 @@
 # make_list.py
 # Usage:
-#   # NYUv2 (자동: rgb_da ↔ depth_inpainted_mm, 2컬럼 est gt)
+#   # NYUv2 (automatic: rgb_da ↔ depth_inpainted_mm, 2-column est gt)
 #   python make_list.py --dataset nyuv2 --root /media/vip/T31/NYUv2_official --out nyu_val.txt
 #
-#   # 3컬럼(est sparse gt)로 만들고 싶다면(NUY엔 sparse가 없어서 placeholder 사용)
+#   # For 3-column format (est sparse gt), NYU uses placeholder for sparse
 #   python make_list.py --dataset nyuv2 --root /media/vip/T31/NYUv2_official --out nyu_triplet.txt \
 #       --nyu-format est-sparse-gt --nyu-sparse-placeholder -
 #
-#   # 디렉터리를 자동이 아닌 수동으로 지정
+#   # Manual directory specification instead of automatic detection
 #   python make_list.py --dataset nyuv2 --root /media/vip/T31/NYUv2_official --out nyu_val.txt \
 #       --nyu-est-dir /media/vip/T31/NYUv2_official/rgb_da \
 #       --nyu-gt-dir  /media/vip/T31/NYUv2_official/depth_inpainted_mm
 #
-#   # (참고) KITTI도 유지. 필요 시 사용하세요.
+#   # Note: KITTI is also supported
 #   python make_list.py --dataset kitti --root /data/kitti --out kitti_val.txt
 #
 import os, glob, argparse
@@ -46,8 +46,8 @@ def _index_by_stem(dir_path, exts):
 # ---------- NYUv2 ----------
 def _autodetect_dir_with_basename(root, basename, exts):
     """
-    root 아래에서 basename이 정확히 basename인 디렉터리들 중,
-    지정 확장자 파일 수가 가장 많은 디렉터리를 선택
+    Find directories with exact basename under root and select
+    the one with the most files of specified extensions
     """
     root = _abs(root)
     cands = []
@@ -69,34 +69,34 @@ def make_nyu_list(root, out_path, nyu_est_dir=None, nyu_gt_dir=None,
     """
     nyu_format:
       - 'est-gt'         -> line: <est> <gt>
-      - 'est-sparse-gt'  -> line: <est> <sparse> <gt> (NYU엔 sparse가 없으므로 placeholder 사용)
+      - 'est-sparse-gt'  -> line: <est> <sparse> <gt> (NYU uses placeholder for sparse)
     """
-    # 1) est / gt 디렉터리 자동 탐지 (필요시 수동 지정으로 대체)
+    # 1) Auto-detect est/gt directories (can be overridden manually)
     if nyu_est_dir is None:
         nyu_est_dir = _autodetect_dir_with_basename(root, "rgb_da", [".png", ".jpg", ".jpeg"])
     if nyu_gt_dir is None:
         nyu_gt_dir  = _autodetect_dir_with_basename(root, "depth_inpainted_mm", [".png"])
     if nyu_est_dir is None or nyu_gt_dir is None:
         raise FileNotFoundError(
-            "NYUv2 디렉터리 자동탐지 실패. 다음 폴더명이 root 하위에 있어야 합니다:\n"
+            "NYUv2 directory auto-detection failed. Required folders under root:\n"
             "  - est: 'rgb_da' (png/jpg)\n  - gt : 'depth_inpainted_mm' (png)\n"
-            "필요시 --nyu-est-dir / --nyu-gt-dir 로 직접 지정하세요."
+            "Use --nyu-est-dir / --nyu-gt-dir to specify manually if needed."
         )
 
-    # 2) 파일 인덱스 생성 (basename stem 기준 매칭)
+    # 2) Create file index (matching by basename stem)
     est_index = _index_by_stem(nyu_est_dir, [".png", ".jpg", ".jpeg"])
     gt_index  = _index_by_stem(nyu_gt_dir,  [".png"])
 
     common_stems = sorted(set(est_index.keys()) & set(gt_index.keys()))
     if not common_stems:
-        raise RuntimeError("매칭되는 파일이 없습니다. (stem 기준) rgb_da와 depth_inpainted_mm의 파일명을 확인하세요.")
+        raise RuntimeError("No matching files found. Check filenames in rgb_da and depth_inpainted_mm (stem-based matching).")
 
     missed_est = len(gt_index) - len(common_stems)
     missed_gt  = len(est_index) - len(common_stems)
-    if missed_est > 0: print(f"[WARN] est 미매칭: {missed_est} (gt에는 있으나 est에 없음)")
-    if missed_gt  > 0: print(f"[WARN] gt 미매칭: {missed_gt} (est에는 있으나 gt에 없음)")
+    if missed_est > 0: print(f"[WARN] est unmatched: {missed_est} (in gt but not in est)")
+    if missed_gt  > 0: print(f"[WARN] gt unmatched: {missed_gt} (in est but not in gt)")
 
-    # 3) 라인 작성
+    # 3) Write lines
     lines = []
     if nyu_format == "est-gt":
         for stem in common_stems:
@@ -109,7 +109,7 @@ def make_nyu_list(root, out_path, nyu_est_dir=None, nyu_gt_dir=None,
 
     _write_lines(lines, out_path)
 
-# ---------- KITTI (유지) ----------
+# ---------- KITTI ----------
 def _autodetect_kitti_dirs(root):
     root = _abs(root)
     candidates = [
@@ -125,14 +125,14 @@ def _autodetect_kitti_dirs(root):
         if os.path.isdir(sp) and os.path.isdir(gt):
             if glob.glob(os.path.join(sp, "*.png")) and glob.glob(os.path.join(gt, "*.png")):
                 return _abs(sp), _abs(gt)
-    # fallback: 이름 기반 검색
+    # fallback: search by name
     velos = [d for d,_,_ in os.walk(root) if d.endswith("velodyne_raw")]
     gts   = [d for d,_,_ in os.walk(root) if d.endswith("groundtruth_depth")]
     for sp in velos:
         for gt in gts:
             if glob.glob(os.path.join(sp, "*.png")) and glob.glob(os.path.join(gt, "*.png")):
                 return _abs(sp), _abs(gt)
-    raise FileNotFoundError("KITTI val 디렉터리를 찾지 못했습니다. --root 구조를 확인하거나 --sparse-dir/--gt-dir 지정.")
+    raise FileNotFoundError("KITTI val directory not found. Check --root structure or specify --sparse-dir/--gt-dir.")
 
 def make_kitti_list(root, out_path, sparse_dir=None, gt_dir=None):
     import glob, os
@@ -146,19 +146,19 @@ def make_kitti_list(root, out_path, sparse_dir=None, gt_dir=None):
 
     gt_pngs = sorted(glob.glob(os.path.join(gt_dir, "*.png")))
     if not gt_pngs:
-        raise FileNotFoundError("KITTI GT PNG가 없습니다.")
+        raise FileNotFoundError("No KITTI GT PNG files found.")
 
     lines, missed = [], 0
     for gt in gt_pngs:
         bn = os.path.basename(gt)
 
-        # (1) 동일 파일명 매칭 먼저
+        # (1) Try exact filename matching first
         sp = os.path.join(sp_dir, bn)
         if os.path.isfile(sp):
             lines.append(f"{_abs(sp)} {_abs(gt)}")
             continue
 
-        # (2) '..._groundtruth_depth_...' -> '..._velodyne_raw_...' 치환 매칭
+        # (2) Try substitution matching: '..._groundtruth_depth_...' -> '..._velodyne_raw_...'
         cand = bn.replace("_groundtruth_depth_", "_velodyne_raw_", 1)
         sp2 = os.path.join(sp_dir, cand)
         if os.path.isfile(sp2):
@@ -168,7 +168,7 @@ def make_kitti_list(root, out_path, sparse_dir=None, gt_dir=None):
         missed += 1
 
     if missed:
-        print(f"[WARN] sparse 매칭 실패: {missed}")
+        print(f"[WARN] sparse matching failed: {missed}")
     _write_lines(lines, out_path)
 
 
@@ -179,12 +179,12 @@ def main():
     ap.add_argument("--root", required=True)
     ap.add_argument("--out", required=True)
     # NYU options
-    ap.add_argument("--nyu-est-dir", default=None, help="rgb_da 디렉터리 직접 지정")
-    ap.add_argument("--nyu-gt-dir",  default=None, help="depth_inpainted_mm 디렉터리 직접 지정")
+    ap.add_argument("--nyu-est-dir", default=None, help="Directly specify rgb_da directory")
+    ap.add_argument("--nyu-gt-dir",  default=None, help="Directly specify depth_inpainted_mm directory")
     ap.add_argument("--nyu-format",  default="est-gt", choices=["est-gt","est-sparse-gt"])
     ap.add_argument("--nyu-sparse-placeholder", default="-",
-                    help="nyu-format=est-sparse-gt일 때 sparse 칼럼에 쓸 placeholder")
-    # KITTI options (유지)
+                    help="Placeholder for sparse column when nyu-format=est-sparse-gt")
+    # KITTI options
     ap.add_argument("--sparse-dir", default=None)
     ap.add_argument("--gt-dir", default=None)
     args = ap.parse_args()

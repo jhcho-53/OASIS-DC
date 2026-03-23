@@ -171,7 +171,6 @@ def main():
     # Save predictions if requested
     if args.save_predictions:
         print(f"Prediction saving not yet implemented")
-        # TODO: Implement prediction saving functionality
     
     print("\nEvaluation completed!")
 

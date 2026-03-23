@@ -1,5 +1,5 @@
-# Compatibility layer - imports from new refactored structure  
+# Compatibility layer for affinity modules
 from .affinity import HCLApproxAffinity, EllipticAffinity
 
-# Re-export for backward compatibility
+# Backward compatibility exports
 __all__ = ['HCLApproxAffinity', 'EllipticAffinity']

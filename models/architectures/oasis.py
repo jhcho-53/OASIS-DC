@@ -263,7 +263,7 @@ class OASIS_DC(nn.Module):
         else:
             p_feat = None
 
-        # 초기값 D0
+        # Initial value D0
         res_out = None
         D0 = P
         if self.res is not None:
@@ -310,7 +310,7 @@ class OASIS_DC(nn.Module):
                 patches = unfold_neighbors(Dt, ksz)
                 center = kk // 2
                 patches_center = patches.clone()
-                patches_center[:, center:center+1, :, :] = D0  # 중심은 항상 D0 참조
+                patches_center[:, center:center+1, :, :] = D0  # Center always references D0
                 Dk = (Ak * patches_center).sum(1, keepdim=True)
                 mix = mix + sigma[:, idx:idx+1] * Dk
 
