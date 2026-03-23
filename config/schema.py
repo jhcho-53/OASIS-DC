@@ -24,7 +24,7 @@ class OneShotPaths:
     gt: Optional[str] = None
 
 @dataclass
-class MCPropCfg:
+class OasisCfg:
     dmax: float
     steps: int
     kernels: Tuple[int,...]

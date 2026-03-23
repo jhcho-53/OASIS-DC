@@ -1,9 +1,0 @@
-{
-  "model": {
-    "geometry": "elliptic",
-    "use_residual": true
-  },
-  "train": {
-    "tag": "mcprop_1shot_ellip"
-  }
-}
