@@ -20,7 +20,7 @@
 
 ## 🔥 News
 - **[2026]** OASIS-DC has been **accepted to ICRA 2026**.
-- **Code and pretrained models will be released soon.** (This repository will be updated.)
+- **Pretrained models will be released soon.** (This repository will be updated.)
 
 ---
 
