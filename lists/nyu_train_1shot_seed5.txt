@@ -1,1 +1,0 @@
-train/rgb/0534.png train/depth_inpainted_mm/0534.png 0534 train/rgb_da/0534.png
